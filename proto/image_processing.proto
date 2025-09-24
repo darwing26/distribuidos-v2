@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package imageprocessing;
+
+// Servicio para procesamiento de imágenes
+service ImageProcessingService {
+    // Procesar una imagen
+    rpc ProcessImage(ProcessImageRequest) returns (ProcessImageResponse);
+    
+    // Obtener estado del nodo
+    rpc GetNodeStatus(NodeStatusRequest) returns (NodeStatusResponse);
+    
+    // Ping para verificar conectividad
+    rpc Ping(PingRequest) returns (PingResponse);
+}
+
+// Mensajes de solicitud
+message ProcessImageRequest {
+    string image_id = 1;
+    string image_path = 2;
+    string output_path = 3;
+    repeated Transformation transformations = 4;
+}
+
+message NodeStatusRequest {
+    string node_id = 1;
+}
+
+message PingRequest {
+    string timestamp = 1;
+}
+
+// Mensajes de respuesta
+message ProcessImageResponse {
+    bool success = 1;
+    string message = 2;
+    string processed_image_path = 3;
+    ProcessingStats stats = 4;
+    repeated string errors = 5;
+}
+
+message NodeStatusResponse {
+    string node_id = 1;
+    NodeState state = 2;
+    int32 active_jobs = 3;
+    int32 completed_jobs = 4;
+    int32 failed_jobs = 5;
+    float cpu_usage = 6;
+    float memory_usage = 7;
+}
+
+message PingResponse {
+    string timestamp = 1;
+    string node_id = 2;
+    bool healthy = 3;
+}
+
+// Tipos de datos
+message Transformation {
+    TransformationType type = 1;
+    map<string, string> parameters = 2;
+}
+
+message ProcessingStats {
+    int64 processing_time_ms = 1;
+    int64 file_size_before = 2;
+    int64 file_size_after = 3;
+    string format_before = 4;
+    string format_after = 5;
+}
+
+// Enums
+enum TransformationType {
+    UNKNOWN = 0;
+    GRAYSCALE = 1;
+    RESIZE = 2;
+    CROP = 3;
+    ROTATE = 4;
+    FLIP = 5;
+    BLUR = 6;
+    SHARPEN = 7;
+    BRIGHTNESS_CONTRAST = 8;
+    WATERMARK = 9;
+    CONVERT_FORMAT = 10;
+}
+
+enum NodeState {
+    UNKNOWN_STATE = 0;
+    ACTIVE = 1;
+    INACTIVE = 2;
+    ERROR = 3;
+    BUSY = 4;
+}
