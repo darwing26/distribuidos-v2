@@ -6,6 +6,10 @@ import argparse
 import signal
 import logging
 
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def signal_handler(signum, frame):
     """Manejador de señales para cierre graceful"""
     logger.info(f"Señal {signum} recibida, cerrando nodo...")
